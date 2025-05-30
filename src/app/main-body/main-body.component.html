@@ -1,0 +1,70 @@
+<div class="container">
+      <h1>Gasoline Cost Calculator</h1>
+      <p class="subtitle">Calculate costs based on tank volume changes for different gasoline types</p>
+      
+      <div class="calculator-grid">
+        <div *ngFor="let gas of gasolineTypes; let i = index" class="gas-card">
+          <h3>{{ gas.name }}</h3>
+          
+          <div class="input-group">
+            <label>Price per Gallon ($)</label>
+            <input 
+              type="number" 
+              [(ngModel)]="gas.price" 
+              (input)="calculateCost(i)"
+              step="0.01"
+              min="0"
+              placeholder="0.00">
+          </div>
+          
+          <div class="input-group">
+            <label>Beginning Volume (gallons)</label>
+            <input 
+              type="number" 
+              [(ngModel)]="gas.beginningVolume" 
+              (input)="calculateCost(i)"
+              step="0.1"
+              min="0"
+              placeholder="0.0">
+          </div>
+          
+          <div class="input-group">
+            <label>Ending Volume (gallons)</label>
+            <input 
+              type="number" 
+              [(ngModel)]="gas.endingVolume" 
+              (input)="calculateCost(i)"
+              step="0.1"
+              min="0"
+              placeholder="0.0">
+          </div>
+          
+          <div class="results">
+            <div class="result-item">
+              <span class="label">Volume Used:</span>
+              <span class="value">{{ gas.volumeUsed.toFixed(1) }} gal</span>
+            </div>
+            <div class="result-item total">
+              <span class="label">Total Cost:</span>
+              <span class="value">${{ gas.cost.toFixed(2) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="summary">
+        <h2>Summary</h2>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="label">Total Volume Used:</span>
+            <span class="value">{{ getTotalVolume().toFixed(1) }} gallons</span>
+          </div>
+          <div class="summary-item total">
+            <span class="label">Total Cost:</span>
+            <span class="value grand-total">${{ getTotalCost().toFixed(2) }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <button class="reset-btn" (click)="resetAll()">Reset All Values</button>
+    </div>
