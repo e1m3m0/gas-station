@@ -1,4 +1,28 @@
-<div class="container">
+<!-- Navbar with Gas Prices -->
+    <nav class="navbar">
+      <div class="navbar-content">
+        <h2 class="navbar-title">Gas Prices</h2>
+        <div class="price-form">
+          <div *ngFor="let priceItem of gasPrices; let i = index" class="price-input-group">
+            <label>{{ priceItem.name }}</label>
+            <div class="price-input-wrapper">
+              <span class="currency">$</span>
+              <input 
+                type="number" 
+                [(ngModel)]="priceItem.price" 
+                (input)="updateGasPrices()"
+                step="0.01"
+                min="0"
+                placeholder="0.00"
+                class="price-input">
+            </div>
+          </div>
+        </div>
+        <button class="reset-prices-btn" (click)="resetPrices()">Reset Prices</button>
+      </div>
+    </nav>
+
+    <div class="container">
       <h1>Gasoline Cost Calculator</h1>
       <p class="subtitle">Calculate costs based on tank volume changes for different gasoline types</p>
       
@@ -6,15 +30,9 @@
         <div *ngFor="let gas of gasolineTypes; let i = index" class="gas-card">
           <h3>{{ gas.name }}</h3>
           
-          <div class="input-group">
-            <label>Price per Gallon ($)</label>
-            <input 
-              type="number" 
-              [(ngModel)]="gas.price" 
-              (input)="calculateCost(i)"
-              step="0.01"
-              min="0"
-              placeholder="0.00">
+          <div class="price-display">
+            <span class="price-label">Current Price:</span>
+            <span class="price-value">${{ gas.price.toFixed(2) }}/gal</span>
           </div>
           
           <div class="input-group">
@@ -66,5 +84,5 @@
         </div>
       </div>
       
-      <button class="reset-btn" (click)="resetAll()">Reset All Values</button>
+      <button class="reset-btn" (click)="resetVolumes()">Reset Volumes</button>
     </div>

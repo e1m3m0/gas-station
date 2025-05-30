@@ -10,7 +10,10 @@ interface GasolineType {
   volumeUsed: number;
   cost: number;
 }
-
+interface GasPrice {
+  name: string;
+  price: number;
+}
 @Component({
   selector: 'app-main-body',
   imports: [FormsModule, CommonModule],
@@ -18,7 +21,14 @@ interface GasolineType {
   styleUrl: './main-body.component.css'
 })
 export class MainBodyComponent {
-gasolineTypes: GasolineType[] = [
+ gasPrices: GasPrice[] = [
+    { name: 'Regular', price: 0 },
+    { name: 'Mid-Grade', price: 0 },
+    { name: 'Premium', price: 0 },
+    { name: 'Diesel', price: 0 }
+  ];
+
+  gasolineTypes: GasolineType[] = [
     {
       name: 'Regular (87 Octane)',
       price: 0,
@@ -53,6 +63,14 @@ gasolineTypes: GasolineType[] = [
     }
   ];
 
+  updateGasPrices(): void {
+    // Update gasoline types with prices from navbar
+    this.gasolineTypes.forEach((gas, index) => {
+      gas.price = this.gasPrices[index].price;
+      this.calculateCost(index);
+    });
+  }
+
   calculateCost(index: number): void {
     const gas = this.gasolineTypes[index];
     
@@ -71,9 +89,15 @@ gasolineTypes: GasolineType[] = [
     return this.gasolineTypes.reduce((total, gas) => total + gas.cost, 0);
   }
 
-  resetAll(): void {
+  resetPrices(): void {
+    this.gasPrices.forEach(price => {
+      price.price = 0;
+    });
+    this.updateGasPrices();
+  }
+
+  resetVolumes(): void {
     this.gasolineTypes.forEach(gas => {
-      gas.price = 0;
       gas.beginningVolume = 0;
       gas.endingVolume = 0;
       gas.volumeUsed = 0;
