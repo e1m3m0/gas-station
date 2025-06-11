@@ -1,16 +1,16 @@
-<!-- Navbar with Gas Prices -->
+    <!-- Navbar with Global Gas Prices -->
     <nav class="navbar">
       <div class="navbar-content">
-        <h2 class="navbar-title">Gas Prices</h2>
+        <h2 class="navbar-title">Global Gas Prices</h2>
         <div class="price-form">
-          <div *ngFor="let priceItem of gasPrices; let i = index" class="price-input-group">
-            <label>{{ priceItem.name }}</label>
+          <div *ngFor="let gasType of gasTypes; let i = index" class="price-input-group">
+            <label>{{ gasType.shortName }}</label>
             <div class="price-input-wrapper">
               <span class="currency">$</span>
               <input 
                 type="number" 
-                [(ngModel)]="priceItem.price" 
-                (input)="updateGasPrices()"
+                [(ngModel)]="globalPrices[gasType.name]" 
+                (input)="updateAllPumpPrices(gasType.name)"
                 step="0.01"
                 min="0"
                 placeholder="0.00"
@@ -18,71 +18,122 @@
             </div>
           </div>
         </div>
-        <button class="reset-prices-btn" (click)="resetPrices()">Reset Prices</button>
+        <button class="save-prices-btn" [class.saved]="saveButtonText === 'Saved!'" (click)="savePrices()">{{ saveButtonText }}</button>
       </div>
     </nav>
 
     <div class="container">
-      <h1>Gasoline Cost Calculator</h1>
-      <p class="subtitle">Calculate costs based on tank volume changes for different gasoline types</p>
+      <h1>Multi-Pump Gasoline Cost Calculator</h1>
+      <p class="subtitle">Track gasoline costs across 8 pumps with all gas types</p>
       
-      <div class="calculator-grid">
-        <div *ngFor="let gas of gasolineTypes; let i = index" class="gas-card">
-          <h3>{{ gas.name }}</h3>
-          
-          <div class="price-display">
-            <span class="price-label">Current Price:</span>
-            <span class="price-value">${{ gas.price.toFixed(2) }}/gal</span>
-          </div>
-          
-          <div class="input-group">
-            <label>Beginning Volume (gallons)</label>
-            <input 
-              type="number" 
-              [(ngModel)]="gas.beginningVolume" 
-              (input)="calculateCost(i)"
-              step="0.1"
-              min="0"
-              placeholder="0.0">
-          </div>
-          
-          <div class="input-group">
-            <label>Ending Volume (gallons)</label>
-            <input 
-              type="number" 
-              [(ngModel)]="gas.endingVolume" 
-              (input)="calculateCost(i)"
-              step="0.1"
-              min="0"
-              placeholder="0.0">
-          </div>
-          
-          <div class="results">
-            <div class="result-item">
-              <span class="label">Volume Used:</span>
-              <span class="value">{{ gas.volumeUsed.toFixed(1) }} gal</span>
+      <!-- Pump Selection Tabs -->
+      <div class="pump-tabs">
+        <button 
+          *ngFor="let pump of pumps" 
+          [class.active]="selectedPumpId === pump.id"
+          (click)="selectPump(pump.id)"
+          class="pump-tab">
+          {{ pump.name }}
+        </button>
+      </div>
+      
+      <!-- Selected Pump Details -->
+      <div class="pump-container" *ngIf="selectedPump">
+        <h2 class="pump-title">{{ selectedPump.name }}</h2>
+        
+        <div class="gas-grid">
+          <div *ngFor="let gasData of selectedPump.gasData; let i = index" class="gas-card">
+            <h3>{{ getGasTypeByName(gasData.gasType)?.name }}</h3>
+            
+            <div class="price-display">
+              <span class="price-label">Current Price:</span>
+              <span class="price-value">${{ gasData.price.toFixed(2) }}/gal</span>
             </div>
-            <div class="result-item total">
+            
+            <div class="input-group">
+              <label>Beginning Volume (gallons)</label>
+              <input 
+                type="number" 
+                [(ngModel)]="gasData.beginningVolume" 
+                (input)="calculateCost(selectedPump.id, i)"
+                step="0.1"
+                min="0"
+                placeholder="0.0">
+            </div>
+            
+            <div class="input-group">
+              <label>Ending Volume (gallons)</label>
+              <input 
+                type="number" 
+                [(ngModel)]="gasData.endingVolume" 
+                (input)="calculateCost(selectedPump.id, i)"
+                step="0.1"
+                min="0"
+                placeholder="0.0">
+            </div>
+            
+            <div class="results">
+              <div class="result-item">
+                <span class="label">Volume Used:</span>
+                <span class="value">{{ gasData.volumeUsed.toFixed(3) }} gal</span>
+              </div>
+              <div class="result-item total">
+                <span class="label">Total Cost:</span>
+                <span class="value">${{ gasData.cost | floor }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pump Summary -->
+        <div class="pump-summary">
+          <h3>{{ selectedPump.name }} Summary</h3>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span class="label">Total Volume:</span>
+              <span class="value">{{ getPumpTotalVolume(selectedPump.id).toFixed(3) }} gal</span>
+            </div>
+            <div class="summary-item total">
               <span class="label">Total Cost:</span>
-              <span class="value">${{ gas.cost.toFixed(2) }}</span>
+              <span class="value">${{ getPumpTotalCost(selectedPump.id) | floor }}</span>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="summary">
-        <h2>Summary</h2>
-        <div class="summary-grid">
-          <div class="summary-item">
-            <span class="label">Total Volume Used:</span>
-            <span class="value">{{ getTotalVolume().toFixed(1) }} gallons</span>
+      <!-- All Pumps Summary -->
+      <div class="grand-summary">
+        <h2>All Pumps Summary</h2>
+        <div class="pumps-overview">
+          <div *ngFor="let pump of pumps" class="pump-overview-card">
+            <h4>{{ pump.name }}</h4>
+            <div class="overview-stats">
+              <div class="stat">
+                <span class="stat-label">Volume:</span>
+                <span class="stat-value">{{ getPumpTotalVolume(pump.id).toFixed(3) }} gal</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Cost:</span>
+                <span class="stat-value">${{ getPumpTotalCost(pump.id).toFixed(0) }}</span>
+              </div>
+            </div>
           </div>
-          <div class="summary-item total">
-            <span class="label">Total Cost:</span>
-            <span class="value grand-total">${{ getTotalCost().toFixed(2) }}</span>
+        </div>
+        
+        <div class="grand-totals">
+          <div class="grand-total-item">
+            <span class="label">Grand Total Volume:</span>
+            <span class="value">{{ getGrandTotalVolume().toFixed(3) }} gallons</span>
+          </div>
+          <div class="grand-total-item total">
+            <span class="label">Grand Total Cost:</span>
+            <span class="value grand-total">${{ getGrandTotalCost().toFixed(0) }}</span>
           </div>
         </div>
       </div>
       
-      <button class="reset-btn" (click)="resetVolumes()">Reset Volumes</button>
+      <div class="action-buttons">
+        <button class="reset-btn" (click)="resetSelectedPump()">Reset {{ selectedPump?.name }} Volumes</button>
+        <button class="reset-all-btn" (click)="resetAllPumps()">Reset All Pumps</button>
+      </div>
     </div>

@@ -1,4 +1,4 @@
-/* Navbar Styles */
+ /* Navbar Styles */
     .navbar {
       background: linear-gradient(135deg, #2c3e50, #34495e);
       color: white;
@@ -10,7 +10,7 @@
     }
 
     .navbar-content {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 0 20px;
       display: flex;
@@ -23,7 +23,7 @@
       margin: 0;
       font-size: 1.3rem;
       color: white;
-      min-width: 120px;
+      min-width: 150px;
     }
 
     .price-form {
@@ -60,7 +60,7 @@
     }
 
     .price-input {
-      width: 80px;
+      width: 100px;
       padding: 8px 8px 8px 20px;
       border: 2px solid rgba(255,255,255,0.3);
       border-radius: 6px;
@@ -81,9 +81,9 @@
       box-shadow: 0 0 0 2px rgba(52,152,219,0.3);
     }
 
-    .reset-prices-btn {
+    .save-prices-btn {
       padding: 8px 16px;
-      background: rgba(231,76,60,0.8);
+      background: rgba(46,204,113,0.8);
       color: white;
       border: none;
       border-radius: 6px;
@@ -93,14 +93,22 @@
       white-space: nowrap;
     }
 
-    .reset-prices-btn:hover {
-      background: rgba(231,76,60,1);
+    .save-prices-btn:hover {
+      background: rgba(46,204,113,1);
       transform: translateY(-1px);
     }
 
-    /* Main Container Styles */
+    .save-prices-btn.saved {
+      background: rgba(52,152,219,0.8);
+    }
+
+    .save-prices-btn.saved:hover {
+      background: rgba(52,152,219,1);
+    }
+
+    /* Main Container */
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 20px;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -123,7 +131,58 @@
       font-size: 1.1rem;
     }
 
-    .calculator-grid {
+    /* Pump Tabs */
+    .pump-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+      justify-content: center;
+    }
+
+    .pump-tab {
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .pump-tab:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+
+    .pump-tab.active {
+      background: white;
+      color: #667eea;
+      border-color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Pump Container */
+    .pump-container {
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .pump-title {
+      text-align: center;
+      color: white;
+      margin-bottom: 25px;
+      font-size: 2rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    /* Gas Cards Grid */
+    .gas-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
@@ -146,7 +205,7 @@
     .gas-card h3 {
       margin: 0 0 15px 0;
       color: #333;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       text-align: center;
       padding-bottom: 10px;
       border-bottom: 3px solid #667eea;
@@ -235,19 +294,20 @@
       color: #667eea;
     }
 
-    .summary {
+    /* Pump Summary */
+    .pump-summary {
       background: white;
       border-radius: 15px;
       padding: 25px;
-      margin-bottom: 20px;
+      margin-top: 20px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     }
 
-    .summary h2 {
+    .pump-summary h3 {
       margin: 0 0 20px 0;
       color: #333;
       text-align: center;
-      font-size: 1.6rem;
+      font-size: 1.4rem;
     }
 
     .summary-grid {
@@ -282,31 +342,151 @@
       font-weight: bold;
     }
 
+    /* Grand Summary */
+    .grand-summary {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+    }
+
+    .grand-summary h2 {
+      margin: 0 0 25px 0;
+      color: #333;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+
+    .pumps-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .pump-overview-card {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      border: 2px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+
+    .pump-overview-card:hover {
+      border-color: #667eea;
+      transform: translateY(-2px);
+    }
+
+    .pump-overview-card h4 {
+      margin: 0 0 10px 0;
+      color: #333;
+      font-size: 1.1rem;
+    }
+
+    .overview-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .grand-totals {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding-top: 20px;
+      border-top: 3px solid #667eea;
+    }
+
+    .grand-total-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 15px;
+    }
+
+    .grand-total-item.total {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .grand-total-item .label {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      opacity: 0.8;
+    }
+
+    .grand-total-item .value {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
     .grand-total {
-      font-size: 1.8rem !important;
+      font-size: 2rem !important;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
 
-    .reset-btn {
-      display: block;
-      margin: 0 auto;
-      padding: 12px 30px;
-      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-      color: white;
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .reset-btn, .reset-all-btn {
+      padding: 12px 25px;
       border: none;
       border-radius: 25px;
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+    }
+
+    .reset-btn {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      color: white;
+      box-shadow: 0 4px 15px rgba(243,156,18,0.3);
     }
 
     .reset-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255,107,107,0.4);
+      box-shadow: 0 6px 20px rgba(243,156,18,0.4);
     }
 
+    .reset-all-btn {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: white;
+      box-shadow: 0 4px 15px rgba(231,76,60,0.3);
+    }
+
+    .reset-all-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(231,76,60,0.4);
+    }
+
+    /* Responsive Design */
     @media (max-width: 768px) {
       .navbar-content {
         flex-direction: column;
@@ -324,7 +504,7 @@
         gap: 15px;
       }
       
-      .reset-prices-btn {
+      .save-prices-btn {
         align-self: center;
       }
       
@@ -336,13 +516,32 @@
         font-size: 2rem;
       }
       
-      .calculator-grid {
+      .pump-tabs {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      
+      .pump-tab {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+      }
+      
+      .gas-grid {
         grid-template-columns: 1fr;
       }
       
-      .summary-grid {
+      .summary-grid, .grand-totals {
         grid-template-columns: 1fr;
         gap: 15px;
+      }
+      
+      .pumps-overview {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+        align-items: center;
       }
     }
 
@@ -355,5 +554,12 @@
       .price-input {
         width: 70px;
       }
+      
+      .pump-tabs {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .pumps-overview {
+        grid-template-columns: 1fr;
+      }
     }
-  
