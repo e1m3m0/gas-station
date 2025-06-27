@@ -1,4 +1,4 @@
- /* Navbar Styles */
+/* Navbar Styles */
     .navbar {
       background: linear-gradient(135deg, #2c3e50, #34495e);
       color: white;
@@ -60,7 +60,7 @@
     }
 
     .price-input {
-      width: 100px;
+      width: 90px;
       padding: 8px 8px 8px 20px;
       border: 2px solid rgba(255,255,255,0.3);
       border-radius: 6px;
@@ -81,16 +81,26 @@
       box-shadow: 0 0 0 2px rgba(52,152,219,0.3);
     }
 
-    .save-prices-btn {
+    .navbar-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .save-prices-btn, .reset-btn, .reset-all-btn {
       padding: 8px 16px;
-      background: rgba(46,204,113,0.8);
       color: white;
       border: none;
       border-radius: 6px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       cursor: pointer;
       transition: all 0.3s ease;
       white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .save-prices-btn {
+      background: rgba(46,204,113,0.8);
     }
 
     .save-prices-btn:hover {
@@ -104,6 +114,24 @@
 
     .save-prices-btn.saved:hover {
       background: rgba(52,152,219,1);
+    }
+
+    .reset-btn {
+      background: rgba(243,156,18,0.8);
+    }
+
+    .reset-btn:hover {
+      background: rgba(243,156,18,1);
+      transform: translateY(-1px);
+    }
+
+    .reset-all-btn {
+      background: rgba(231,76,60,0.8);
+    }
+
+    .reset-all-btn:hover {
+      background: rgba(231,76,60,1);
+      transform: translateY(-1px);
     }
 
     /* Main Container */
@@ -413,6 +441,7 @@
       gap: 20px;
       padding-top: 20px;
       border-top: 3px solid #667eea;
+      margin-bottom: 30px;
     }
 
     .grand-total-item {
@@ -446,48 +475,107 @@
       text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
 
-    /* Action Buttons */
-    .action-buttons {
+    /* Payment Summary */
+    .payment-summary {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 25px;
+      border: 2px solid #e9ecef;
+    }
+
+    .payment-summary h3 {
+      margin: 0 0 20px 0;
+      color: #333;
+      text-align: center;
+      font-size: 1.4rem;
+    }
+
+    .payment-form {
       display: flex;
-      gap: 15px;
-      justify-content: center;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .reset-btn, .reset-all-btn {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 25px;
-      font-size: 1rem;
+    .payment-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .payment-input-group label {
       font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      color: #555;
+      font-size: 1rem;
     }
 
-    .reset-btn {
-      background: linear-gradient(135deg, #f39c12, #e67e22);
+    .currency-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .currency-input-wrapper .currency {
+      position: absolute;
+      left: 12px;
+      color: #666;
+      font-weight: bold;
+      z-index: 1;
+    }
+
+    .payment-input {
+      width: 100%;
+      padding: 12px 12px 12px 25px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .payment-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    .payment-results {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .payment-result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .payment-result-item.cash-due {
+      background: linear-gradient(135deg, #28a745, #20c997);
       color: white;
-      box-shadow: 0 4px 15px rgba(243,156,18,0.3);
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
     }
 
-    .reset-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(243,156,18,0.4);
+    .payment-result-item .label {
+      font-weight: 600;
     }
 
-    .reset-all-btn {
-      background: linear-gradient(135deg, #e74c3c, #c0392b);
-      color: white;
-      box-shadow: 0 4px 15px rgba(231,76,60,0.3);
-    }
-
-    .reset-all-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(231,76,60,0.4);
+    .payment-result-item .value {
+      font-weight: bold;
     }
 
     /* Responsive Design */
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       .navbar-content {
         flex-direction: column;
         gap: 15px;
@@ -504,10 +592,12 @@
         gap: 15px;
       }
       
-      .save-prices-btn {
-        align-self: center;
+      .navbar-buttons {
+        justify-content: center;
       }
-      
+    }
+
+    @media (max-width: 768px) {
       .container {
         padding: 15px;
       }
@@ -539,9 +629,13 @@
         grid-template-columns: repeat(2, 1fr);
       }
       
-      .action-buttons {
+      .navbar-buttons {
         flex-direction: column;
-        align-items: center;
+        gap: 8px;
+      }
+      
+      .navbar-buttons button {
+        padding: 10px 16px;
       }
     }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FloorPipe } from '../floor.pipe';
+// import { FloorPipe } from '../floor.pipe';
 
 
 interface GasType {
@@ -14,7 +14,7 @@ interface PumpGasData {
   price: number;
   beginningVolume: number;
   endingVolume: number;
-  volumeUsed: number;
+  volumeDispensed: number; // Changed from volumeUsed
   cost: number;
 }
 
@@ -22,19 +22,22 @@ interface Pump {
   id: number;
   name: string;
   gasData: PumpGasData[];
+  // creditCardSales: number; // New property for credit card sales
 }
 
 @Component({
   selector: 'app-main-body',
-  imports: [FormsModule, CommonModule, FloorPipe],
+  imports: [FormsModule, CommonModule],
   templateUrl: './main-body.component.html',
   styleUrl: './main-body.component.css'
 })
-export class MainBodyComponent {
-saveButtonText: string = 'Save Prices';
+export class MainBodyComponent implements OnInit {
+  saveButtonText: string = 'Save Prices';
   selectedPumpId: number = 1;
+  creditCardSales: number = 0;
+  cashDue: number = 0;
 
-  
+  totalCreditCardSales: number = 0;
 
   gasTypes: GasType[] = [
     { name: 'Gasolina Premium', shortName: 'Premium' },
@@ -73,12 +76,13 @@ saveButtonText: string = 'Save Prices';
       const pump: Pump = {
         id: i,
         name: names[i],
+        // creditCardSales: 0,
         gasData: this.gasTypes.map(gasType => ({
           gasType: gasType.name,
           price: 0,
           beginningVolume: 0,
           endingVolume: 0,
-          volumeUsed: 0,
+          volumeDispensed: 0, // Changed from volumeUsed
           cost: 0
         }))
       };
@@ -129,7 +133,7 @@ saveButtonText: string = 'Save Prices';
     }
   }
 
-  updateAllPumpPrices(gasTypeName: string): void {
+ updateAllPumpPrices(gasTypeName: string): void {
     this.pumps.forEach(pump => {
       const gasData = pump.gasData.find(data => data.gasType === gasTypeName);
       if (gasData) {
@@ -145,18 +149,21 @@ saveButtonText: string = 'Save Prices';
     });
   }
 
+  // Updated calculation for dispensed volume (ending - beginning)
   calculateCost(pumpId: number, gasIndex: number): void {
     const pump = this.pumps.find(p => p.id === pumpId);
     if (!pump) return;
 
     const gasData = pump.gasData[gasIndex];
-    gasData.volumeUsed = Math.max(0, gasData.endingVolume - gasData.beginningVolume);
-    gasData.cost = gasData.volumeUsed * gasData.price;
+    // Changed calculation: dispensed = ending - beginning (positive when gas is dispensed)
+    gasData.volumeDispensed = Math.max(0, gasData.endingVolume - gasData.beginningVolume);
+    gasData.cost = gasData.volumeDispensed * gasData.price;
   }
 
+  // Updated to use volumeDispensed
   getPumpTotalVolume(pumpId: number): number {
     const pump = this.pumps.find(p => p.id === pumpId);
-    return pump ? pump.gasData.reduce((total, gas) => total + gas.volumeUsed, 0) : 0;
+    return pump ? pump.gasData.reduce((total, gas) => total + gas.volumeDispensed, 0) : 0;
   }
 
   getPumpTotalCost(pumpId: number): number {
@@ -172,15 +179,37 @@ saveButtonText: string = 'Save Prices';
     return this.pumps.reduce((total, pump) => total + this.getPumpTotalCost(pump.id), 0);
   }
 
+  // New function to update credit card sales for individual pump
+  // updatePumpCreditCardSales(pumpId: number): void {
+  //   const pump = this.pumps.find(p => p.id === pumpId);
+  //   if (!pump) return;
+    
+  //   // Recalculate total credit card sales
+  //   this.calculateTotalCreditCardSales();
+  // }
+
+  // // New function to calculate total credit card sales
+  // calculateTotalCreditCardSales(): void {
+  //   this.totalCreditCardSales = this.pumps.reduce((total, pump) => total + (this.creditCardSales || 0), 0);
+  // }
+
+  // New function to get cash amount due (total cost - credit card sales)
+  getCashAmountDue(): number {
+    return this.cashDue =Math.max(0, this.getGrandTotalCost() - this.creditCardSales);
+  }
+
+  // Updated reset functions to include credit card sales and volumeDispensed
   resetSelectedPump(): void {
     if (!this.selectedPump) return;
     
     this.selectedPump.gasData.forEach(gasData => {
       gasData.beginningVolume = 0;
       gasData.endingVolume = 0;
-      gasData.volumeUsed = 0;
+      gasData.volumeDispensed = 0; // Changed from volumeUsed
       gasData.cost = 0;
     });
+   
+
   }
 
   resetAllPumps(): void {
@@ -188,9 +217,26 @@ saveButtonText: string = 'Save Prices';
       pump.gasData.forEach(gasData => {
         gasData.beginningVolume = 0;
         gasData.endingVolume = 0;
-        gasData.volumeUsed = 0;
+        gasData.volumeDispensed = 0; // Changed from volumeUsed
         gasData.cost = 0;
       });
+      this.creditCardSales = 0; // Reset credit card sales
+      this.cashDue = 0; // Reset cash due
     });
+    
+    // this.totalCreditCardSales = 0; // Reset total credit card sales
   }
+
+  // New function to reset only credit card sales
+  resetCreditCardSales(): void {
+    // this.pumps.forEach(pump => {
+    //   pump.creditCardSales = 0;
+    // });
+    this.creditCardSales = 0;
+  }
+
+  // // New function to update total credit card sales from input
+  // updateTotalCreditCardSales(): void {
+  //   this.calculateTotalCreditCardSales();
+  // }
 }
