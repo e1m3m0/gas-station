@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FloorPipe } from '../floor.pipe';
+// import { FloorPipe } from '../floor.pipe';
 
 
 interface GasType {
@@ -27,7 +27,7 @@ interface Pump {
 
 @Component({
   selector: 'app-main-body',
-  imports: [FormsModule, CommonModule, FloorPipe],
+  imports: [FormsModule, CommonModule],
   templateUrl: './main-body.component.html',
   styleUrl: './main-body.component.css'
 })
